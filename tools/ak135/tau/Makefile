@@ -1,4 +1,4 @@
-FC=gfortran
+FC=gfortran -O0 -gdwarf-2
 #
 IASQ=emtvelin.o
 TAUL=libtau.o libsun.o
@@ -10,7 +10,7 @@ default: remodlv setbrn ttimes
 #  resampling of model 
 REM = remodl.o
 remodlv: $(REM) $(TAUL) $(IASQ)
-	gfortran -o $(BIN)remodlv $(REM) $(IASQ) $(TAUL)
+	$(FC) -o $(BIN)remodlv $(REM) $(IASQ) $(TAUL)
 #
 #  set branches  program
 SBR = setbrn.o
@@ -23,7 +23,7 @@ ttimes: $(TBR) $(TAUL)
 	gfortran -o $(BIN)ttimes $(TBR) $(TAUL)
 #
 libtau.o: libtau.f ttlim.inc
-	gfortran -c libtau.f
+	$(FC) -c libtau.f
 clean:
 	rm $(TAUL) $(TBR) $(SBR) $(REM) $(IASQ)
 	rm $(BIN)remodlv $(BIN)setbrn $(BIN)ttimes
