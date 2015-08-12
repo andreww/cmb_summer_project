@@ -22,4 +22,4 @@ direct: $(DEF)
 	gfortran -o $(BIN)direct $(DEF)
 
 clean:
-	rm $(DEF) $(TEF) $(BIN)direct $(BIN)ttimel
+	rm $(DEF) $(TEF) $(BIN)direct $(BIN)ttimel $(TAUL)
