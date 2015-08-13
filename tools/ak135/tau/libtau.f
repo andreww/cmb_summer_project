@@ -1441,7 +1441,7 @@ c
       if(ns.le.0.or.ns.gt.3) ns=3
       go to (1,2),nf
  1    go to (11,12,13),ns
- 11   open(lu,file=ia,status='old',form='formatted')
+ 11   open(lu,file=trim(ia),status='old',form='formatted')
       rewind lu
       return
  12   inquire(file=ia,exist=exst)
