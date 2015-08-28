@@ -1,0 +1,30 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module _ellip_fort ! in 
+    interface  ! in :ellip
+        subroutine ellip ! in :ellip:ellip.f
+            real, intent(in) :: ecolat
+            logical, intent(out)  :: abrt
+            real, intent(out) :: tcor
+            real, intent(in)  :: azim
+            character*(*), intent(in) :: phase
+            real, intent(in) :: edist
+            real, intent(in) :: edepth
+            entry ellcor(phase,edist,edepth,ecolat,azim,tcor,abrt)
+            entry ellref(ecolat)
+        end subroutine ellip
+        subroutine phase_alias(phase,delta,ip) ! in :ellip:ellip.f
+            character*(*) :: phase
+            real :: delta
+            integer :: ip
+        end subroutine phase_alias
+        function lnblk(s) ! in :ellip:ellip.f
+            character*(*) :: s
+            integer :: lnblk
+        end function lnblk
+    end interface 
+end python module _ellip_fort
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
