@@ -1,0 +1,8 @@
+# File we don't want git to track
+
+# Notebook checkpoint files
+.ipynb_checkpoints
+
+# Python compiled stuff
+*.so
+*.pyc
