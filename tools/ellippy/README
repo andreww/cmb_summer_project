@@ -1,0 +1,79 @@
+# ellippy - ellipticity corrections wrapped in python
+
+This package provides access to the ellipticity corrections
+distributed with the Fortran ttimes software and accessable 
+as ttimel in that software. The origional Fortran distribution
+is avalable from: FIXME: ANU URL
+
+NOTE: Currently only the ak135 model is supported and it is 
+anticipated that the code needed to support other models would
+be best written in Python, with the Fortran from this package 
+replaced too.
+
+## Ellipticity corrections
+
+Most software (such as the ObsPy tau implementation) used
+to calculate the seismic travel time for a 1D Earth model
+makes the assumption that the Earth is spherical. However,
+it is possible provide corrections to such calculated 
+travel times to account for Earth's ellipticity. 
+
+TODO: Add a brief outline of the theory, including 
+equations, and note that we do not have code to build 
+the direct access tables.
+
+TODO: describe Fortran code, and say we provide a wrapper.
+
+## Ellipticity corrections from Python
+
+This package provides a straight forward interface to allow
+the calculation of the ellipticity correction, calling the 
+Fortran routines internally. The package provides two functions.
+
+### `ellippy.ellip_correct(src_lat, src_depth, azim, delta, phase)`
+
+Given a source location and distance and bearing to the station,
+returns the ellipticity correction (in seconds) that must
+be added to the travel time prediction for a spherical Earth
+in order to make a travel time prediction for the elliptical 
+Earth. Arguments are:
+ * `src_lat`: source lattitude (in degrees)
+ * `src_depth`: source depth (in km)
+ * `azim`: azimuth from source to recever (in degrees)
+ * `delta`: epicentral distance between source and recever (in degrees)
+ * `phase`: phase name (e.g. "P", "PcP", "PP", "SKS" etc.)
+If `phase` is not supported a `ValueError` exception is raised.
+
+### `ellippy.ellip_src_sta(src_lat, src_lon, src_depth, sta_lat, sta_lon, phase)`
+Given a source and station location, 
+returns the ellipticity correction (in seconds) that must
+be added to the travel time prediction for a spherical Earth
+in order to make a travel time prediction for the elliptical 
+Earth. Arguments are:
+ * `src_lat`: source lattitude (in degrees)
+ * `src_lon`: source longitude (in degrees)
+ * `src_depth`: source depth (in km)
+ * `sta_lat`: recever / station lattitude (in degrees)
+ * `sta_lon`: recever / station longitude (in degrees)
+ * `phase`: phase name (e.g. "P", "PcP", "PP", "SKS" etc.)
+If `phase` is not supported a `ValueError` exception is raised.
+
+# NOTE: This function is not implemented.
+
+## Supported Earth models
+
+TODO: Only ak135 so far. Need to look at the integration.
+
+## Building the module
+
+    $ python setup.py install --home='../packages/'
+    $ python ./setup.py build
+    $ python ./setup.py install
+
+## Notes
+Phases that appeat twice seem to have the same 
+correction (e.g. PP in the first test). I'm not
+100% sure that this is correct.
+
+I need to sort out a good way of building and installing the 
+Fortran direct file.
