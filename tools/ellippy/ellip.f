@@ -142,7 +142,7 @@ c                                             check phase aliases
 *      write(6,*) "ip:",ip
 c                                              phase not found
       if(ip.lt.0) then
-        write(6,*) phase,'  is not available'
+!AMW        write(6,*) phase,'  is not available'
         abrt = .true.
         return
       endif
@@ -152,13 +152,15 @@ c
 c                                                acquire phase information
        nr = phind(ip)
 
+!AMW added this
 c                                  open ellipticity correction file
       open(21,file='elcordir.tbl',access='direct',
      &     form='formatted',recl=80)
+! end of addition
 
-       write(6,*) "nrec:",nr
+c       write(6,*) "nrec:",nr
        read(21,61,rec=nr) phcod(ip),np,d1,d2
-       write(6,*) "phcode,np,d1,d2: ", phcod(ip),np,d1,d2
+c       write(6,*) "phcode,np,d1,d2: ", phcod(ip),np,d1,d2
        nr = nr+1
        if(np.ne.Ne) write(6,*) "HELP! - index wrong"
        do 15 i=1,np
