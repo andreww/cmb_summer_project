@@ -75,8 +75,8 @@ c                                    loop on delta
 c
       write(*,100)delta,(i,phcd(i),tt(i),te(i),dtdd(i),dtdh(i),
      1 dddp(i),i=1,n)
- 100  format(/1x,f6.2,i5,2x,a,f9.2,f11.2,f11.4,1p2e11.2/
-     1 (7x,i5,2x,a,0pf9.2,f11.2,f11.4,1p2e11.2))
+ 100  format(/1x,f6.2,i5,2x,a,f11.4,f11.4,f11.4,1p2e11.2/
+     1 (7x,i5,2x,a,0pf11.4,f11.4,f11.4,1p2e11.2))
       go to 1
  2    write(*,101)delta
  101  format(/1x,'No arrivals for delta =',f7.2)
