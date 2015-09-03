@@ -16,7 +16,7 @@
 
 
 # compile fortran code tomo_predict_vdh.f. Output is a.out
-g77 -ffixed-line-length-132 tomo_predict_vdh.f
+gfortran -ffixed-line-length-132 tomo_predict_vdh.f
 
 # Define input argument as seismic phase 
 set phase = $1
