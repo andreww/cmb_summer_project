@@ -1,0 +1,61 @@
+#!/bin/csh
+# FILENAME: c.tomo_predict_vdh
+# Written by E Garnero c2004
+# Modified by H Bentham Aug-2015
+
+# C-shell script to prepare variables and files for fortran code: tomo_predict_vdh.f
+# which produces travel time corrections using 3D tomography model:
+# Van Der Hilst (1999) . Codes may have to be revised for other tomography models.
+
+# Scripts requires one input argument - seismic phase (in string format)
+# e.g. P, PP, PcP
+# Files required:
+# tomo_predict_vdh.f
+# ak135.1D_vp
+# vdh3D_1999
+
+
+# compile fortran code tomo_predict_vdh.f. Output is a.out
+g77 -ffixed-line-length-132 tomo_predict_vdh.f
+
+# Define input argument as seismic phase 
+set phase = $1
+set infile = input.latlon_tomo_predict
+set Zcorr_top = 0
+set Zcorr_bot = 2889
+
+echo $phase 'predictions for the van der Hilst model' >! vdh1999.$phase
+
+set NREC = ` wc -l $infile | awk '{print $1}' `
+echo $NREC
+@ i = 1
+while ( $i <= $NREC )
+set slat = ` awk ' NR=='$i' {print $1}' $infile `
+set slon = ` awk ' NR=='$i' {print $2}' $infile `
+set elat = ` awk ' NR=='$i' {print $3}' $infile `
+set elon = ` awk ' NR=='$i' {print $4}' $infile `
+set Z    = ` awk ' NR=='$i' {print $5}' $infile `
+set NAME = ` awk ' NR=='$i' {print $6}' $infile `
+
+# use taup toolkit to produce coordinates for raypath
+taup_path -mod ak135 -h $Z -sta $slat $slon -evt $elat $elon -ph $phase
+
+# run fortran executable using 1D velocity model ak135 and 3D velocity model 
+./a.out << END >! tmptyme
+ak135.1D_vp
+vdh3D_1999
+taup_path.gmt
+$Zcorr_top $Zcorr_bot
+END
+set tyme = ` cat tmptyme `
+
+\mv pathstats $NAME.pathstats
+
+echo $tyme $slat $slon $elat $elon $Z >> vdh1999.$phase
+
+@ i += 1
+end
+
+\rm a.out tmptyme
+
+awk 'NR>1 {print $1}' vdh1999.$phase >! vdh1999.$phase.dt
