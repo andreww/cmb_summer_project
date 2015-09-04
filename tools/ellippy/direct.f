@@ -25,4 +25,6 @@
         enddo
         go to 10
 11	continue
+        close(15)
+        close(8)
         end

@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
+import inspect
+import os
+
 import numpy as np
 
+__DATA_DIR = os.path.dirname(os.path.abspath(inspect.getfile(
+              inspect.currentframe())))
+
 import _ellip_fort
+import _direct_fort
 
 def ellip_setup():
-    import inspect
-    import os
-    import _direct_fort
-
-    __DATA_DIR = os.path.dirname(os.path.abspath(inspect.getfile(
-                  inspect.currentframe())))
 
     # Nasty nasty nasty Fortran, with no concept of a path
     startdir = os.getcwd()
@@ -42,9 +43,13 @@ def ellip_correct(src_lat, src_depth, bazim, delta, phase):
       phase = phase + (' '*(8-len(phase)))
 
    # call fortran
+   # Nasty nasty nasty Fortran, with no concept of a path
+   startdir = os.getcwd()
+   os.chdir(__DATA_DIR)
    _ellip_fort.ellref(co_lat)
    tcor, abrt = _ellip_fort.ellcor(phase, delta, src_depth,
         co_lat, bazim)
+   os.chdir(startdir)
 
    # Handle "phase not found" errors
    if abrt:
