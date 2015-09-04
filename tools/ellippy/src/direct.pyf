@@ -1,12 +1,12 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module _direct_fort ! in 
-    interface  ! in :_direct_fort
+python module direct_fort ! in 
+    interface  ! in :direct_fort
         subroutine direct ! in :_direct_fort:direct.f
         end subroutine direct
     end interface 
-end python module _direct_fort
+end python module direct_fort
 
 ! This file was auto-generated with f2py (version:2).
 ! See http://cens.ioc.ee/projects/f2py2e/

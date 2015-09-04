@@ -1,7 +1,7 @@
 !    -*- f90 -*-
 ! Note: the context of this file is case sensitive.
 
-python module _ellip_fort ! in 
+python module ellip_fort ! in 
     interface  ! in :ellip
         subroutine ellip ! in :ellip:ellip.f
             real, intent(in) :: ecolat
@@ -24,7 +24,7 @@ python module _ellip_fort ! in
             integer :: lnblk
         end function lnblk
     end interface 
-end python module _ellip_fort
+end python module ellip_fort
 
 ! This file was auto-generated with f2py (version:2).
 ! See http://cens.ioc.ee/projects/f2py2e/

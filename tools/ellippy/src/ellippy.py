@@ -8,15 +8,15 @@ import numpy as np
 __DATA_DIR = os.path.dirname(os.path.abspath(inspect.getfile(
               inspect.currentframe())))
 
-import _ellip_fort
-import _direct_fort
+import ellip_fort
+import direct_fort
 
 def ellip_setup():
 
     # Nasty nasty nasty Fortran, with no concept of a path
     startdir = os.getcwd()
     os.chdir(__DATA_DIR)
-    _direct_fort.direct()
+    direct_fort.direct()
     os.chdir(startdir)
     
 
@@ -46,8 +46,8 @@ def ellip_correct(src_lat, src_depth, bazim, delta, phase):
    # Nasty nasty nasty Fortran, with no concept of a path
    startdir = os.getcwd()
    os.chdir(__DATA_DIR)
-   _ellip_fort.ellref(co_lat)
-   tcor, abrt = _ellip_fort.ellcor(phase, delta, src_depth,
+   ellip_fort.ellref(co_lat)
+   tcor, abrt = ellip_fort.ellcor(phase, delta, src_depth,
         co_lat, bazim)
    os.chdir(startdir)
 
