@@ -58,6 +58,10 @@ Earth. Arguments are:
  * `phase`: phase name (e.g. "P", "PcP", "PP", "SKS" etc.)
 If `phase` is not supported a `ValueError` exception is raised.
 
+### `ellippy.ellip_setup()`
+Set up the direct access file - run this once, after you have
+installed the package.
+
 # NOTE: This function is not implemented.
 
 ## Supported Earth models
@@ -67,7 +71,12 @@ TODO: Only ak135 so far. Need to look at the integration.
 ## Building the module
 
     $ python setup.py install --home='../packages/'
+
+# something like export PYTHONPATH='./tools/packages/lib/python/'
+
     $ python ./setup.py build
+
+
     $ python ./setup.py install
 
 ## Notes

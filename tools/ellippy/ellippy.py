@@ -4,6 +4,21 @@ import numpy as np
 
 import _ellip_fort
 
+def ellip_setup():
+    import inspect
+    import os
+    import _direct_fort
+
+    __DATA_DIR = os.path.dirname(os.path.abspath(inspect.getfile(
+                  inspect.currentframe())))
+
+    # Nasty nasty nasty Fortran, with no concept of a path
+    startdir = os.getcwd()
+    os.chdir(__DATA_DIR)
+    _direct_fort.direct()
+    os.chdir(startdir)
+    
+
 def ellip_correct(src_lat, src_depth, bazim, delta, phase):
    """
 
