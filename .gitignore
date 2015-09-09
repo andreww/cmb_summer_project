@@ -6,3 +6,8 @@
 # Python compiled stuff
 *.so
 *.pyc
+
+# Compiled stuff
+*.mod
+*.o
+*.dSYM
