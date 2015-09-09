@@ -50,11 +50,11 @@ c . . . open file to print pathstats:
 c . . . open file containing path of lats/lons:
 	open(15,file=infil)
 	read(15,"(a1)")junk
-        read(15,*)delta,R,T,plat,plon
+        read(15,*)delta,R,plat,plon
         xlast = R
         ylast = 0.
 
-20      read(15,*,end=30)delta,R,T,plat,plon
+20      read(15,*,end=30)delta,R,plat,plon
 	if(R.gt.6370.)R=6370.
 	DEL = delta*dtr
 	x = R * cos(DEL)
