@@ -61,6 +61,85 @@ def geog2str(r, lat, lon):
 def cart2str(x, y, z):
     return "x = " + str(x) + " y = " + str(y) + " z = " + str(z)
 
+def vincenty_direct(lat, lon, azimuth, distance,
+             r_major=6378.1370, r_minor=6356.752314, r_sphere=None):
+    """
+    Calculate the location of a point on an ellipsoid given the azimuth
+    and distance from a starting point using Vincenty's direct approach
+    (T. Vincenty 1975, "Direct and inverse solutions of geodesics on the 
+    ellipsoid with application of nested equations" Survey Review XXII 
+    pp.88-93).
+
+    Arguments are the lattitude and longitude of the starting point (in
+    degrees) and the azimuth (in degrees, clockwise from north) and 
+    distance (normally in km) of the geodesic. Optiionally the semi-major
+    and semi-minor radius of the ellipsoid or the radius of a sphere 
+    (if polar flattening is ignored) can be supplied. Units of distance
+    must be consistant between these and the distance along the geodesic.
+    These default to the WGS 84 ellipsoid in km.
+
+    A length two tuple is returned with the first element containing the
+    latititude and the second the longitude of the point (in degrees).
+    """
+   
+    lat = m.radians(lat)
+    lon = m.radians(lon)
+    azi = m.radians(azimuth)
+    
+
+    if (r_sphere is not None):
+        r_major = r_sphere
+        r_minor = r_sphere
+        f = 0.0
+    else:
+        f = (r_major-r_minor)/r_major
+
+    
+    U1 = m.atan((1.0-f) * m.tan(lat))
+
+    sigma1 = m.atan2(m.tan(U1), m.cos(azi))
+    sin_apha = m.cos(U1)*m.sin(azi)
+    cos_2_alpha = 1 - sin_apha**2
+    u_2 = cos_2_alpha * ((r_major**2 - r_minor**2) / r_minor**2) 
+    A = 1 + (u_2 / 16384)*(4096 + u_2 * (-768 + u_2 * (320 - 175 * u_2)))
+    B = (u_2/1024)*(256 + u_2*(-128+u_2*(74-47*u_2)))
+    sig_0 = distance/(r_minor*A)
+    sig = sig_0
+
+    epsilon = 1E-12 # Accuracy 
+    max_iter = 500
+    for i in range(max_iter):
+        sig_old = sig
+        sig_2_m = 2.0*sigma1 + sig
+        d_sig = B * m.sin(sig) * (
+                  m.cos(sig_2_m) + 0.25*B*(
+                    m.cos(sig)*(-1.0 + 2.0*m.cos(sig_2_m)**2.0) 
+                  - (1.0/6.0)*B*m.cos(sig_2_m)*(-3.0+4.0*m.sin(sig)**2.0)
+                  * (-3.0+4.0*m.cos(sig_2_m)**2)))
+        sig = sig_0 + d_sig
+
+        if (m.fabs(sig-sig_old) <= epsilon):
+            # Found a solution in i iters...
+            break
+
+    lat2 = m.atan2(m.sin(U1)*m.cos(sig)+m.cos(U1)*m.sin(sig)*m.cos(azi),
+               (1.0-f)*m.sqrt(sin_apha**2.0+(m.sin(U1)*m.sin(sig)-m.cos(U1)
+                          *m.cos(sig)*m.cos(azi))**2.0))
+
+    lam = m.atan2(m.sin(sig)*m.sin(azi),
+                  m.cos(U1)*m.cos(sig) - m.sin(U1)*m.sin(sig)*m.cos(azi))
+
+    C = (f/16.0) * cos_2_alpha * (4.0 + f*(4.0-3.0*cos_2_alpha))
+
+    L = lam - (1.0-C)*f*sin_apha*(
+        sig+C*m.sin(sig)*(m.cos(sig_2_m)
+         +C*m.cos(sig)*(-1.0+2.0*m.cos(sig_2_m)**2.0)))
+
+    lon2 = L + lon
+
+    return(m.degrees(lat2),m.degrees(lon2))
+
+
 def vincenty(lat1, lon1, lat2, lon2, 
              r_major=6378.1370, r_minor=6356.752314, r_sphere=None):
     """

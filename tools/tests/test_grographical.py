@@ -86,6 +86,18 @@ class TestVincentyFunctions(unittest.TestCase):
         npt.assert_almost_equal(gt.vincenty(lat1,0.0,lat2,lon2,
                   r_major=6378.388000,r_minor=6356.911946),correct_result,6)
 
+
+    def test_vincenty_direct_tabulated_b(self):
+        lat1 = gt.dms2dec(37.0,19.0,54.95367)
+        lon1 = 0.0
+        lat2 = gt.dms2dec(26.0,7.0,42.83946)
+        lon2 = gt.dms2dec(41.0,28.0,35.50729)
+        dist = 4085.966703
+        azi = gt.dms2dec(95.0,27.0,59.63089)
+        correct_result = (lat2, lon2)
+        npt.assert_almost_equal(gt.vincenty_direct(lat1, lon1, azi, dist,
+             r_major=6378.388000,r_minor=6356.911946),correct_result,6)
+
     def test_vincenty_inverse_tabulated_c(self):
         correct_result = (8084.823839, gt.dms2dec(15.0,44.0,23.74850), 
                           gt.dms2dec(144.0,55.0,39.92147))
@@ -94,6 +106,17 @@ class TestVincentyFunctions(unittest.TestCase):
         lon2 = gt.dms2dec(137.0,47.0,28.31435)
         npt.assert_almost_equal(gt.vincenty(lat1,0.0,lat2,lon2,
                   r_major=6378.388000,r_minor=6356.911946),correct_result,6)
+
+    def test_vincenty_direct_tabulated_c(self):
+        lat1 = gt.dms2dec(35.0,16.0,11.24862)
+        lon1 = 0.0
+        lat2 = gt.dms2dec(67.0,22.0,14.77638)
+        lon2 = gt.dms2dec(137.0,47.0,28.31435)
+        dist = 8084.823839
+        azi = gt.dms2dec(15.0,44.0,23.74850)
+        correct_result = (lat2, lon2)
+        npt.assert_almost_equal(gt.vincenty_direct(lat1, lon1, azi, dist,
+             r_major=6378.388000,r_minor=6356.911946),correct_result,6)
 
     # FIXME
     # Skip tabulated data d - very sensive to lattitude...
@@ -106,6 +129,17 @@ class TestVincentyFunctions(unittest.TestCase):
         lon2 = gt.dms2dec(179.0,46.0,17.84244)
         npt.assert_almost_equal(gt.vincenty(lat1,0.0,lat2,lon2,
                   r_major=6378.388000,r_minor=6356.911946),correct_result,6)
+
+    def test_vincenty_direct_tabulated_c(self):
+        lat1 = gt.dms2dec(1.0,0.0,0.0)
+        lon1 = 0.0
+        lat2 = gt.dms2dec(1.0,1.0,15.18952)
+        lon2 = gt.dms2dec(179.0,46.0,17.84244)
+        dist = 19780.006558
+        azi = gt.dms2dec(4.0,59.0,59.99995)
+        correct_result = (lat2, lon2)
+        npt.assert_almost_equal(gt.vincenty_direct(lat1, lon1, azi, dist,
+             r_major=6378.388000,r_minor=6356.911946),correct_result,6)
 
 if __name__ == '__main__':
     unittest.main()
