@@ -68,7 +68,7 @@ if __name__ == "__main__":
 	# example input values
 	slat1 = [13.60, 11.60]
 	slon1 = [77.44, 80.44]
-	elat1 = [93.0, 91.0]
+	elat1 = [83.0, 81.0]
 	elon1 = [8.0, 7.0]
 	edep1 = [100, 120]
 	statn1 = ['GBA', 'HLMB']

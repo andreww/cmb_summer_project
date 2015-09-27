@@ -1,0 +1,11 @@
+To avoid f2py erroring out with
+
+ld: library not found for -lgcc_s.10.5
+collect2: error: ld returned 1 exit status
+
+I needed to do this:
+cd /usr/local/lib
+sudo ln -s ../../lib/libSystem.B.dylib libgcc_s.10.5.dylib
+sudo ln -s ../../lib/libSystem.B.dylib libgcc_s.10.4.dylib
+
+see https://github.com/Homebrew/homebrew/issues/40653
