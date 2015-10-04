@@ -135,7 +135,7 @@ class TomographicCorrection(object):
             "Only one instance is permitted by the Fortran"
         tomo_predict.tomo_predict.setup(file_1d, file_3d)
 
-    def calculate(self, evtlon, evtlat, evtdep, stalon, stalat, phase_list):
+    def calculate(self, evtlat, evtlon, evtdep, stalat, stalon, phase_list):
 
         arrivals = self.earth_model.get_ray_paths_geo(evtdep, evtlat, evtlon,
                     stalat, stalon, phase_list)
@@ -164,9 +164,17 @@ if __name__ == "__main__":
         corrector = TomographicCorrection('ak135.1D_vp', 'vdh3D_1999', ellipsoid=geod.Geodesic(a=6371000.0, f=0))
 
         for slat, slon, elat, elon, edep in zip(slats, slons, elats, elons, edeps):
-            dts = corrector.calculate(slon, elat, edep, slon, slat, ['P', 'PcP'])
+            dts = corrector.calculate(slat, elon, edep, slat, slon, ['P', 'PcP'])
             print 'P: ', dts[0]
             print 'PcP: ', dts[-1]
+
+        # Check the paths...
+        model = TauPyModelGeo(ellipsoid=geod.Geodesic(a=6371000.0, f=0), model="iasp91")
+        arrivals = model.get_ray_paths_geo(edeps[1], elats[1], elons[1],
+                    slats[1], slons[1], ['PcP'])
+        for lat, lon, dep in zip(arrivals[0].path['lat'], arrivals[0].path['lon'], arrivals[0].path['depth']):
+            print lat, lon, dep
+        
 
 
 
