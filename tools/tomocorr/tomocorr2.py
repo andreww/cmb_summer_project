@@ -161,7 +161,7 @@ if __name__ == "__main__":
         elons = [8.0, 7.0]
         edeps = [100, 120]
 
-        corrector = TomographicCorrection('ak135.1D_vp', 'vdh3D_1999')
+        corrector = TomographicCorrection('ak135.1D_vp', 'vdh3D_1999', ellipsoid=geod.Geodesic(a=6371000.0, f=0))
 
         for slat, slon, elat, elon, edep in zip(slats, slons, elats, elons, edeps):
             dts = corrector.calculate(slon, elat, edep, slon, slat, ['P', 'PcP'])
