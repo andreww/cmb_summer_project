@@ -240,6 +240,7 @@ subroutine get_dt(lat1, lon1, dep, VPREM, sddp, dt, resid)
          layer = izi
          exit
       endif
+      if (izi == 20) layer = izi
    enddo
 
    ! get VDH grid pt coords surrounding lat,lon
