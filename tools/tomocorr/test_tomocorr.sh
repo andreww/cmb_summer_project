@@ -10,12 +10,13 @@ done
 # source-receiver geometry and phase name
 evlo=0
 evla=0
+evdp=100
 stlo=90
 stla=0
 phase=PcP
 
-# Input to the csh version: stla stlo evla evlo evdp phase
-input="$stla $stlo $evla $evlo $phase"
+# Input to the csh version: stla stlo evla evlo evdp name
+echo "$stla $stlo $evla $evlo $evdp $phase" > input.latlon_tomo_predict
 
 # 1D and 3D model files
 model1d=ak135.1D_vp
@@ -27,8 +28,9 @@ path=taup_path.gmt
 # Run csh script, which creates taup_path.gmt
 ./c.tomo_predict_vdh "$phase" >/dev/null &&
 [ -f "$path" ] || { echo "Some problem running script or creating \"$path\"" >&2; exit 1; }
+
 # Get dt from output
-dt_ejg=$(awk 'NR==2{print $1}' vdh1999.$phase)
+read dt_ejg junk < vdh1999.${phase}.dt
 
 # Run precompiled version; capture output, which is dt
 dt_ajn=$(
