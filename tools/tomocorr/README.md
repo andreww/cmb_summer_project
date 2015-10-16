@@ -11,24 +11,6 @@ See 'building the Python interface' below for details.
 		                                       lat, lon, depth)
 
 
-## TODO
-
-### TauPy doesn't give you actual coordinates
-The current implementation of raypath calculation in ObsPy does not give you
-ray paths which are in true geographic space; they are only given in distance
-and radius.  However, a small routine to 'do the maths' would not be difficult
-(for a spherical Earth; elliptical calculation is a bit tricker, but will
-presumably be in some Python module out there somewhere).
-
-One would need to be able to do:
-
-	>>> (lon, lat, dep, distance) = path(TauPy_model, evtlon, evtlat, evtdep,
-		                                 stalon, stalat)
-
-### `tomocorr.py`
-
-Rewrite `tomocorr.py` after implementing the above.
-
 ## Updated Fortran module
 
 `tomo_predict.f90` is an updated version of the original
@@ -78,3 +60,13 @@ or
 You may need to set your f2py, Fortran compiler and favourite options, e.g.:
 
 	$ make libs F2PY=f2py FC="ifort" FFLAGS="-Qweird-intel-options"
+
+In some cases (i.e., for me), by default f2py doesn't set the intents correctly
+on some of the subroutines.  You may need to hand-edit them in this case.  To
+do this, you will first need to make just the .pyf file:
+
+	$ make tomo_predict.pyf
+
+Edit `tomo_predict.pyf` to suit (update the intents), then build the .so file:
+
+	$ make
