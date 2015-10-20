@@ -113,6 +113,64 @@ class TauPyModelGeo(taup.TauPyModel):
         return arrivals
 
 
+    def get_pierce_points_geo(self, source_depth_in_km, source_latitude_in_deg,
+                              source_longitude_in_deg, station_latitude_in_deg,
+                              station_longitude_in_deg, phase_list=("ttall",)):
+        """
+        Return ray paths of every given phase with geographical info.
+
+        :param source_depth_in_km: Source depth in km
+        :type source_depth_in_km: float
+        :param source_latitude_in_deg: Source location latitude in degrees
+        :type source_latitude_in_deg: float
+        :param source_longitude_in_deg: Source location longitue in degrees
+        :type source_longitude_in_deg: float
+        :param station_latitude_in_deg: Station location latitude in degrees
+        :type station_latitude_in_deg: float
+        :param station_longitude_in_deg: Station location longitude in degrees
+        :type station_longitude_in_deg: float
+        :param phase_list: List of phases for which travel times should be
+            calculated. If this is empty, all phases will be used.
+        :type phase_list: list of str
+        :return: List of ``Arrival`` objects, each of which has the time,
+            corresponding phase name, ray parameter, takeoff angle, etc. as
+            attributes.
+        :rtype: :class:`Arrivals`
+        """
+
+        # Find the geodesic, azimuth and angular distance between epicenter
+        # and station 
+        g = self.ellipsoid.Inverse(source_latitude_in_deg, source_longitude_in_deg,
+                              station_latitude_in_deg, station_longitude_in_deg)
+        distance_in_deg = g['a12']
+        azimuth = g['azi1']
+
+        # Find the path(s) and decorate with lat and lon found from the direct
+        # geodesic problem. We just change the path attribute of the
+        # arrival object - everything else stays the same.
+        arrivals = self.get_pierce_points(source_depth_in_km, distance_in_deg, 
+                                      phase_list)
+        line = self.ellipsoid.Line(source_latitude_in_deg, 
+                                   source_longitude_in_deg, azimuth)
+       
+        pathList = []
+        for arrival in arrivals:
+            for path_point in arrival.pierce:
+                pos = line.ArcPosition(np.degrees(path_point['dist']))
+                diffTDG = np.array([(
+                    path_point['p'],
+                    path_point['time'],
+                    path_point['dist'],
+                    path_point['depth'],
+                    pos['lat2'],
+                    pos['lon2'])], dtype=TimeDistLoc)
+                pathList.append(diffTDG)
+            arrival.pierce = np.concatenate(pathList)
+
+        return arrivals
+
+
+
 # Tomographic correction...
 # =========================
 #
